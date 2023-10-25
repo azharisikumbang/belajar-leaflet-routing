@@ -1,0 +1,23 @@
+{
+  "name": "leaflet-routing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "beefy app.js:bundle.js --live",
+    "bundle": "browserify app.js -o bundle.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "leaflet-control-geocoder": "^2.4.0",
+    "leaflet-routing-machine": "^3.2.12"
+  },
+  "devDependencies": {
+    "beefy": "^2.1.8",
+    "browserify": "^17.0.0"
+  }
+}
