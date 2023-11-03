@@ -1,12 +1,13 @@
 var L = require('leaflet');
+var xml2js = require('xml2js');
 require('leaflet-routing-machine');
 require('leaflet-control-geocoder');
 
-if (!navigator.geolocation) {
-    console.log("Your browser doesn't support geolocation feature!");
-} else {
-    navigator.geolocation.getCurrentPosition(loadMap, err => console.log(err));
-}
+// if (!navigator.geolocation) {
+//     console.log("Your browser doesn't support geolocation feature!");
+// } else {
+//     // navigator.geolocation.getCurrentPosition(loadMap, err => console.log(err));
+// }
 
 function loadMap(position) {
 
@@ -26,8 +27,8 @@ function loadMap(position) {
 
     L.Routing.control({
         waypoints: [
-            L.latLng(-0.924521, 100.363363),
-            L.latLng(-1.557592, 101.239464)
+            L.latLng(-0.924521, 100.363363), // padang
+            L.latLng(-1.557592, 101.239464) // solok selatan
         ],
         routeWhileDragging: true,
         geocoder: L.Control.Geocoder.nominatim()
@@ -50,23 +51,33 @@ function loadMap(position) {
                         
                         // reverse lat long
                         fetch('http://nominatim.openstreetmap.org/reverse?format=json&lat=' + resp[0].lat + '&lon=' + resp[0].lon) 
-                            .then(cityResp => cityResp.json())
-                            .then(cityResp => {
-
+                            .then(city => city.json())
+                            .then(city => {
                                 console.table({
-                                    'alamat': cityResp.display_name,
-                                    'region': cityResp.address.region,
-                                    'city': cityResp.address.city,
-                                    'kab': cityResp.address.county,
-                                    'latitude': cityResp.lat,
-                                    'longitude': cityResp.lon,
+                                    'alamat': city.display_name,
+                                    'region': city.address.region,
+                                    'city': city.address.city,
+                                    'kab': city.address.county,
+                                    'latitude': city.lat,
+                                    'longitude': city.lon,
                                 });
                             });
                     });
-
-                
             }
         }
     })
     .addTo(map);
 }
+
+fetch('https://data.bmkg.go.id/DataMKG/MEWS/DigitalForecast/DigitalForecast-SumateraBarat.xml')
+    .then(resp => resp.text())
+    .then(resp => {
+
+        var parser = new xml2js.Parser();
+
+        parser.parseString(resp, function (err, result) {
+            console.dir(result.data.forecast);
+        });
+        
+    })
+
